@@ -9,15 +9,30 @@
  */
 class jobActions extends sfActions
 {
-  public function executeIndex(sfWebRequest $request)
+    /**
+     * Метод JobeetJobPeer::doSelect получает список вакансий из базы данных (как?)
+     * и сохраняет их в массиве $JobeetJobs. $JobeetJobs доступен в шаблоне 
+     * indexSuccess.php
+     * 
+     * @param sfWebRequest $request
+     */
+    public function executeIndex(sfWebRequest $request)
   {
     $this->JobeetJobs = JobeetJobPeer::doSelect(new Criteria());
   }
 
+  /**
+   * Метод JobeetJobPeer::retrieveByPk выбирает из базы данных одну вакансию (как?)
+   * и сохраняет в массив $job, доступный в showSuccess.php.
+   * Метод forward404Unless($this->job) перенаправляет на страницу 404, когда
+   * параметр false
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeShow(sfWebRequest $request)
   {
-    $this->JobeetJob = JobeetJobPeer::retrieveByPk($request->getParameter('id'));
-    $this->forward404Unless($this->JobeetJob);
+    $this->job = JobeetJobPeer::retrieveByPk($request->getParameter('id'));
+    $this->forward404Unless($this->job);
   }
 
   public function executeNew(sfWebRequest $request)
