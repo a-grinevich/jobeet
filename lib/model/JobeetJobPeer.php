@@ -17,5 +17,14 @@
  * @package    lib.model
  */
 class JobeetJobPeer extends BaseJobeetJobPeer {
+    
+    static public function getActiveJobs()
+    {
+        $criteria = new Criteria();
+        $criteria->add(self::EXPIRES_AT, time(), Criteria::GREATER_THAN);
+        $criteria->addDescendingOrderByColumn(self::EXPIRES_AT);
+        
+        return self::doSelect($criteria);
+    }
 
 } // JobeetJobPeer
