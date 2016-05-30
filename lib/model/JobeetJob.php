@@ -17,6 +17,17 @@
  * @package    lib.model
  */
 class JobeetJob extends BaseJobeetJob {
+    
+    public function save(PropelPDO $con = NULL) 
+        {
+                if ($this->isNew() && !$this->getExpiresAt())
+                {
+                    $now = $this->getCreatedAt() ? $this->getCreatedAt('U') : time();
+                    $this->setExpiresAt($now + 86400 * sfConfig::get('app_active_days'));
+                }
+                
+                return parent::save($con);
+        }
 
 	/**
 	 * Initializes internal state of JobeetJob object.
