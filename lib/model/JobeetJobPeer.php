@@ -18,6 +18,12 @@
  */
 class JobeetJobPeer extends BaseJobeetJobPeer
 {
+  static public $types = array(
+      'full-time' => 'Full time',
+      'part-time' => 'Part time',
+      'freelance' => 'Freelance',
+  );
+
   static public function getActiveJobs(Criteria $criteria = null)
   {
     return self::doSelect(self::addActiveJobsCriteria($criteria));

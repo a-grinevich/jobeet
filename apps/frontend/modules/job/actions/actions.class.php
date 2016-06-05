@@ -21,14 +21,6 @@ class jobActions extends sfActions
         $this->categories = JobeetCategoryPeer::getWithJobs();
   }
 
-  /**
-   * Метод JobeetJobPeer::retrieveByPk выбирает из базы данных одну вакансию (как?)
-   * и сохраняет в массив $job, доступный в showSuccess.php.
-   * Метод forward404Unless($this->job) перенаправляет на страницу 404, когда
-   * параметр false
-   * 
-   * @param sfWebRequest $request
-   */
   public function executeShow(sfWebRequest $request)
   {
     $this->job = $this->getRoute()->getObject();
@@ -36,13 +28,14 @@ class jobActions extends sfActions
 
   public function executeNew(sfWebRequest $request)
   {
-    $this->form = new JobeetJobForm();
+    $job = new JobeetJob();
+    $job->setType('full-time');
+    
+    $this->form = new JobeetJobForm($job);
   }
 
   public function executeCreate(sfWebRequest $request)
   {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
-
     $this->form = new JobeetJobForm();
 
     $this->processForm($request, $this->form);
@@ -52,15 +45,12 @@ class jobActions extends sfActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($JobeetJob = JobeetJobPeer::retrieveByPk($request->getParameter('id')), sprintf('Object JobeetJob does not exist (%s).', $request->getParameter('id')));
-    $this->form = new JobeetJobForm($JobeetJob);
+    $this->form = new JobeetJobForm($this->getRoute()->getObject());
   }
 
   public function executeUpdate(sfWebRequest $request)
   {
-    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($JobeetJob = JobeetJobPeer::retrieveByPk($request->getParameter('id')), sprintf('Object JobeetJob does not exist (%s).', $request->getParameter('id')));
-    $this->form = new JobeetJobForm($JobeetJob);
+    $this->form = new JobeetJobForm($this->getRoute()->getObject());
 
     $this->processForm($request, $this->form);
 
@@ -71,8 +61,8 @@ class jobActions extends sfActions
   {
     $request->checkCSRFProtection();
 
-    $this->forward404Unless($JobeetJob = JobeetJobPeer::retrieveByPk($request->getParameter('id')), sprintf('Object JobeetJob does not exist (%s).', $request->getParameter('id')));
-    $JobeetJob->delete();
+    $job = $this->getRoute()->getObject();
+    $job->delete();
 
     $this->redirect('job/index');
   }
@@ -82,9 +72,9 @@ class jobActions extends sfActions
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
     {
-      $JobeetJob = $form->save();
+      $job = $form->save();
 
-      $this->redirect('job/edit?id='.$JobeetJob->getId());
+      $this->redirect('job_show'.$job);
     }
   }
 }
