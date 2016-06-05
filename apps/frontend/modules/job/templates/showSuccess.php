@@ -30,8 +30,9 @@
   <h4>How to apply?</h4>
  
   <p class="how_to_apply"><?php echo $job->getHowToApply() ?></p>
+
  
   <div class="meta">
-    <small>posted on <?php echo $job->getCreatedAt('m/d/Y') ?></small>
+      <small>posted on <?php echo $job->getCreatedAt('m/d/Y') ?></small>
   </div>
 </div>
