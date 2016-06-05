@@ -2,8 +2,12 @@
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 job:
   class:   sfPropelRouteCollection
-  options: { model: JobeetJob, column: token }
-  requirements: { token: \w+ }
+  options:
+    model:          JobeetJob
+    column:         token
+    object_actions: { publish: put }
+  requirements:
+    token: \w+
  
 job_show_user:
   url:     /job/:company_slug/:location_slug/:id/:position_slug
